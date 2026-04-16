@@ -272,11 +272,9 @@ and/or
 ```
 
 
-## Theory 
+## Fredholm Neural Networks Theory 
 
-# 1.  Fredholm Neural Networks for Integral Equations
-
-## Background
+### Background
 The basis of FNNs is the method of successive approximations (fixed point iterations) to approximate the fixed-point solution to Fredholm Integral Equations (FIEs). Specifically, the framework is built upon linear FIEs of the second kind, which are of the form:
 
 $$f(x) = g(x) + \int_{\Omega}K(x,z) f(z)dz, $$
@@ -297,7 +295,7 @@ When $\mathcal{T}$ is a contraction, we can obtain the iterative process:
 $$f_n(x)= g(x) +  \int_{\Omega}f_{n-1})(x), \,\,\ n \geq 1,$$
 which converges to the fixed point solution. This is often referred to as the method of successive approximations.
 
-## FNN construction for forward FIEs 
+### FNN construction for forward FIEs 
 
 Fredholm Neural Networks are based on the observation that the FIE approximation $f_K(x)$ can be implemented as a deep neural network with a one-dimensional input $x$, $M$ hidden layers, a linear activation function and a single output node corresponding to the estimated solution $f(x)$. The weights and biases are:
 
@@ -367,7 +365,7 @@ assuming $z_i = x$.
 *Figure 1: Architecture of the Fredholm Neural Network (FNN). Outputs can be considered across the entire (or a subset of the) input grid, or for an arbitrary output vector as shown in the second graph, by applying the integral mapping one last time.*
 
 
-## Application to non-linear FIEs 
+### Application to non-linear FIEs 
 
 We can create an iterative process that "linearizes" the integral equation and allows us to solve a linear FIE at each step. To this end, consider the non-linear, non-expansive integral operator:
 
@@ -388,7 +386,7 @@ for $n \geq 1$, converges to the fixed point $f^*$  which is a solution of the n
 *Figure 2: Iterative process to solve the non-linear FIE using the Fredholm NN architecture.*
 
 
-## Application to BVP ODEs
+### Application to BVP ODEs
 
 Consider a BVP of the form:
 
@@ -411,7 +409,7 @@ Finally, by definition of $u(x)$, we can obtain the solution to the BVP by:
 $$y(x) = \frac{h(x) - u(x)}{g(x)}.$$
 
 
-# Fredholm Neural Networks for the Laplace PDE
+### Fredholm Neural Networks for the Laplace PDE
 
 Here we briefly provide the background in Potential Theory and how it is applied in the context of FNNs, resulting in the Frendholm Neural Network to solve the PDE.
 
@@ -437,7 +435,7 @@ $$\beta({x}^{\star}) = 2 f(x^{\star}) - 2 \int_{\partial \Omega} \beta(y) \frac{
 *Figure 4: Custom FNN construction. The first component is a Fredholm Neural Network and the second encapsulates the representation of the double layer potential, decomposed into a the final hidden layer.*
 
 
-###  
+####  
 The Laplace PDE 
 
 $$
