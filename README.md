@@ -4,6 +4,18 @@ A Python package for solving **Fredholm integral equations of the second kind** 
 
 The Fredholm Neural Network (Fredholm NN / FNN) approach encodes the method of successive approximations (Picard / Krasnoselskii-Mann iterations) directly into the weights and biases of a deep network with linear activations. No training is required — the network is constructed analytically from the kernel and free term.
 
+**Supported problem types:**
+
+| Problem | Solver |
+|---|---|
+| Linear FIE (contractive operator) | `solve_linear_fie` |
+| Linear FIE (non-expansive operator, KM iteration) | `solve_linear_fie(..., km_constant=κ)` |
+| Non-linear FIE | `solve_nonlinear_fie` |
+| Second-order BVP ODE | `solve_bvp_ode` |
+| 2-D Laplace PDE (unit disc) | `solve_laplace` |
+
+---
+
 ## Citation
 
 If you use this package please cite:
@@ -32,17 +44,6 @@ and/or
 }
 ```
 
-**Supported problem types:**
-
-| Problem | Solver |
-|---|---|
-| Linear FIE (contractive operator) | `solve_linear_fie` |
-| Linear FIE (non-expansive operator, KM iteration) | `solve_linear_fie(..., km_constant=κ)` |
-| Non-linear FIE | `solve_nonlinear_fie` |
-| Second-order BVP ODE | `solve_bvp_ode` |
-| 2-D Laplace PDE (unit disc) | `solve_laplace` |
-
----
 
 ## Installation
 
