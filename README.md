@@ -1,8 +1,36 @@
 # Fredholm Neural Networks (Python) 
 
-A Python package for solving **Fredholm integral equations of the second kind** using the Fredholm Neural Network (FNN) framework.
+A Python package for solving **Fredholm integral equations of the second kind** using the Fredholm Neural Network (FNN) framework. (Additional theoretical background given below and i
 
-The FNN approach encodes the method of successive approximations (Picard / Krasnoselskii-Mann iterations) directly into the weights and biases of a deep network with linear activations. No training is required — the network is constructed analytically from the kernel and free term.
+The Fredholm Neural Network (Fredholm NN / FNN) approach encodes the method of successive approximations (Picard / Krasnoselskii-Mann iterations) directly into the weights and biases of a deep network with linear activations. No training is required — the network is constructed analytically from the kernel and free term.
+
+## Citation
+
+If you use this package please cite:
+
+```bibtex
+@article{georgiou2025fredholm,
+  title   = {Fredholm neural networks},
+  author  = {Georgiou, Kyriakos and Siettos, Constantinos and Yannacopoulos, Athanasios N},
+  journal = {SIAM Journal on Scientific Computing},
+  volume  = {47},
+  number  = {4},
+  pages   = {C1006--C1031},
+  year    = {2025},
+  publisher = {SIAM}
+}
+```
+
+and/or
+
+```bibtex
+@article{georgiou2025fredholm_pde,
+  title   = {Fredholm Neural Networks for forward and inverse problems in elliptic PDEs},
+  author  = {Georgiou, Kyriakos and Siettos, Constantinos and Yannacopoulos, Athanasios N},
+  journal = {arXiv preprint arXiv:2507.06038},
+  year    = {2025}
+}
+```
 
 **Supported problem types:**
 
@@ -243,34 +271,6 @@ fredholm_nn/
 
 ---
 
-## Citation
-
-If you use this package please cite:
-
-```bibtex
-@article{georgiou2025fredholm,
-  title   = {Fredholm neural networks},
-  author  = {Georgiou, Kyriakos and Siettos, Constantinos and Yannacopoulos, Athanasios N},
-  journal = {SIAM Journal on Scientific Computing},
-  volume  = {47},
-  number  = {4},
-  pages   = {C1006--C1031},
-  year    = {2025},
-  publisher = {SIAM}
-}
-```
-
-and/or
-
-```bibtex
-@article{georgiou2025fredholm_pde,
-  title   = {Fredholm Neural Networks for forward and inverse problems in elliptic PDEs},
-  author  = {Georgiou, Kyriakos and Siettos, Constantinos and Yannacopoulos, Athanasios N},
-  journal = {arXiv preprint arXiv:2507.06038},
-  year    = {2025}
-}
-```
-
 
 ## Fredholm Neural Networks Theory 
 
@@ -409,7 +409,7 @@ Finally, by definition of $u(x)$, we can obtain the solution to the BVP by:
 $$y(x) = \frac{h(x) - u(x)}{g(x)}.$$
 
 
-### Fredholm Neural Networks for the Laplace PDE
+### (Potential) Fredholm Neural Networks for the Laplace PDE
 
 Here we briefly provide the background in Potential Theory and how it is applied in the context of FNNs, resulting in the Fredholm Neural Network to solve the PDE.
 
@@ -430,22 +430,15 @@ Hence, the function $\beta({x}^{\star})$, defined on the boundary, must satisfy 
 
 $$\beta({x}^{\star}) = 2 f(x^{\star}) - 2 \int_{\partial \Omega} \beta(y) \frac{\partial \Phi}{\partial n_{y}}(x^{\star}, y) d \sigma_{y},  x^{\star} \in \partial \Omega.$$
 
-<img width="548" height="376" alt="Screenshot 2025-10-08 at 4 58 58 PM" src="https://github.com/user-attachments/assets/f9edb609-f257-4c06-b96e-7ee4095c34bd" />
+We can derive an alternative representation of the double layer potential that allows us to smoothly approach the boundary: 
+$$ u(x) = \int_{\partial \Omega} \big( \beta(y(s)) -  \beta(x^*) \big)
+    \Big(\frac{\partial \Phi(x, y)}{\partial n_y}  - \frac{\partial \Phi(x^*, y)}{\partial n_y} \Big) d\sigma_y + \frac{1}{2} \beta(x^*)  + \int_{\partial \Omega} \beta(y) \frac{\partial \Phi(x^*, y)}{\partial n_y} d\sigma_y + \int_{\Omega} \Phi(x, y) \psi(y) dy. $$
 
-*Figure 4: Custom FNN construction. The first component is a Fredholm Neural Network and the second encapsulates the representation of the double layer potential, decomposed into a the final hidden layer.*
+This can be represented as a Fredholm Neural Network, which we refer to as the Potential Fredholm Neural Network as described and represented schematically below. 
 
 
-####  
-The Laplace PDE 
-
-$$
-\begin{cases}
- \Delta u(x)  = 0, \quad x \in \Omega \\ 
-u(x) = f(x), \quad x \in \partial \Omega.   
-\end{cases}
-$$
-
-can be solved using a Fredholm NN, with M+1 hidden layers, where the weights and biases of the M hidden layers are used iteratively solve the BIE on a discretized grid of the boundary, $y_1, \dots, y_N$, 
+### Proposition
+The Laplace PDE can be solved using a Fredholm NN, with M+1 hidden layers, where the weights and biases of the M hidden layers are used iteratively solve the BIE on a discretized grid of the boundary, $y_1, \dots, y_N$, 
 for which the final and output weights $W_{M+1} \in \mathbb{R}^{N \times N}, W_O \in \mathbb{R}^N$ are given by:
 
 $$
@@ -463,4 +456,8 @@ $$ b_{M+1} = \left(\begin{array}{ccc}
 $$
 
 where $x^*:= (1, \phi) \in \partial \Omega$ is the unique point on the boundary corresponding to $x:= (r, \phi) \in \Omega$.  
+
+<img width="548" height="376" alt="Screenshot 2025-10-08 at 4 58 58 PM" src="https://github.com/user-attachments/assets/f9edb609-f257-4c06-b96e-7ee4095c34bd" />
+
+*Figure 4: Custom FNN construction. The first component is a Fredholm Neural Network and the second encapsulates the representation of the double layer potential, decomposed into a the final hidden layer.*
 
