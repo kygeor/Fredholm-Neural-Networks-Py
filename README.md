@@ -411,7 +411,7 @@ $$y(x) = \frac{h(x) - u(x)}{g(x)}.$$
 
 ### Fredholm Neural Networks for the Laplace PDE
 
-Here we briefly provide the background in Potential Theory and how it is applied in the context of FNNs, resulting in the Frendholm Neural Network to solve the PDE.
+Here we briefly provide the background in Potential Theory and how it is applied in the context of FNNs, resulting in the Fredholm Neural Network to solve the PDE.
 
 Consider the two-dimensional Laplace equation for $u(x)$:
 
