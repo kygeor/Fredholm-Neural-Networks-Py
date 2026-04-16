@@ -1,4 +1,4 @@
-# fredholm_nn
+# Fredholm Neural Networks (Python) 
 
 A Python package for solving **Fredholm integral equations of the second kind** using the Fredholm Neural Network (FNN) framework.
 
