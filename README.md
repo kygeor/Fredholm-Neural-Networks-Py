@@ -1,6 +1,6 @@
 # Fredholm Neural Networks (Python) 
 
-A Python package for solving **Fredholm integral equations of the second kind** using the Fredholm Neural Network (FNN) framework. (Additional theoretical background given below and i
+A Python package for solving **Fredholm integral equations of the second kind** using the Fredholm Neural Network (FNN) framework. (Additional theoretical background given below)
 
 The Fredholm Neural Network (Fredholm NN / FNN) approach encodes the method of successive approximations (Picard / Krasnoselskii-Mann iterations) directly into the weights and biases of a deep network with linear activations. No training is required — the network is constructed analytically from the kernel and free term.
 
