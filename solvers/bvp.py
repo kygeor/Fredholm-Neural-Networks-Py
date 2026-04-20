@@ -149,21 +149,18 @@ def solve_bvp_ode(
     # Build the FIE kernel K(x, t) and free term f(x)
     # ------------------------------------------------------------------
 
-    def _kernel(x, t):
+    def _kernel(z, x):
         """
-        K(x, t) = p(x) · G(x, t).
+        Called by FredholmNN as kernel(z_integration, x_evaluation).
 
-        Accepts broadcastable (x, t) pairs (e.g. shapes (N,1) and (1,M)).
+        K(z, x) = p(x) · G(z, x),  with G symmetric: G(z,x) = G(x,z).
+        p must be evaluated at the evaluation point x (second argument).
         """
-        # Green's function for the second-order BVP on [a, b]
-        # Generalised for arbitrary [a, b] domain:
-        #   G(x, t) = (t−a)(b−x)/(b−a)  for t ≤ x
-        #           = (x−a)(b−t)/(b−a)  for t > x
         L = b - a
         green = np.where(
-            t <= x,
-            (t - a) * (b - x) / L,
-            (x - a) * (b - t) / L,
+            z <= x,
+            (z - a) * (b - x) / L,
+            (x - a) * (b - z) / L,
         )
         return p_func(x) * green
 
