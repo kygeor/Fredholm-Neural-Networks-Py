@@ -432,6 +432,7 @@ Hence, the function $\beta({x}^{\star})$, defined on the boundary, must satisfy 
 $$\beta({x}^{\star}) = 2 f(x^{\star}) - 2 \int_{\partial \Omega} \beta(y) \frac{\partial \Phi}{\partial n_{y}}(x^{\star}, y) d \sigma_{y},  x^{\star} \in \partial \Omega.$$
 
 We can derive an alternative representation of the double layer potential that allows us to smoothly approach the boundary: 
+
 $$ u(x) = \int_{\partial \Omega} \big( \beta(y(s)) -  \beta(x^*) \big)
     \Big(\frac{\partial \Phi(x, y)}{\partial n_y}  - \frac{\partial \Phi(x^*, y)}{\partial n_y} \Big) d\sigma_y + \frac{1}{2} \beta(x^*)  + \int_{\partial \Omega} \beta(y) \frac{\partial \Phi(x^*, y)}{\partial n_y} d\sigma_y + \int_{\Omega} \Phi(x, y) \psi(y) dy. $$
 
