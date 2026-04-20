@@ -433,7 +433,7 @@ $$\beta({x}^{\star}) = 2 f(x^{\star}) - 2 \int_{\partial \Omega} \beta(y) \frac{
 
 We can derive an alternative representation of the double layer potential that allows us to smoothly approach the boundary: 
 
-$$ u(x) = \int_{\partial \Omega} \big( \beta(y(s)) -  \beta(x^*) \big)
+$$ u(x) = \int_{\partial \Omega} \big(\beta(y) -  \beta(x^*) \big)
     \Big(\frac{\partial \Phi(x, y)}{\partial n_y}  - \frac{\partial \Phi(x^*, y)}{\partial n_y} \Big) d\sigma_y + \frac{1}{2} \beta(x^*)  + \int_{\partial \Omega} \beta(y) \frac{\partial \Phi(x^*, y)}{\partial n_y} d\sigma_y + \int_{\Omega} \Phi(x, y) \psi(y) dy. $$
 
 This can be represented as a Fredholm Neural Network, which we refer to as the Potential Fredholm Neural Network as described and represented schematically below. 
