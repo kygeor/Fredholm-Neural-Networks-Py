@@ -2,28 +2,24 @@
 run_examples.py
 ---------------
 Runs one example of every solver, prints the MSE against the known exact
-solution, and saves two figures per example:
+solution, and displays two figures per example:
 
-  <n>_<name>_solution.png  — predicted vs. exact overlay
-  <n>_<name>_error.png     — pointwise absolute error
+  - predicted vs. exact solution overlay
+  - pointwise absolute error
 
 For the non-linear FIE (no closed-form exact), only the solution plot is
 produced.  For the Laplace PDE the plots are 2-D contour maps.
 
-Run from the project root:
+Run from any directory:
     python run_examples.py
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
-import os
 
-PASS_ICON  = "[PASS]"
-FAIL_ICON  = "[FAIL]"
-MSE_TOL    = 1e-4
-OUTPUT_DIR = "example_plots"
-
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+PASS_ICON = "[PASS]"
+FAIL_ICON = "[FAIL]"
+MSE_TOL   = 1e-4
 
 
 # ---------------------------------------------------------------------------
@@ -37,33 +33,12 @@ def report(name, mse, tol=MSE_TOL) -> bool:
     return passed
 
 
-def _save(fig, filename):
-    path = os.path.join(OUTPUT_DIR, filename)
-    fig.savefig(path, dpi=150, bbox_inches="tight")
-    plt.close(fig)
-    print(f"  Saved: {path}")
-
-
-def plot_1d(tag, x, f_pred, f_exact=None,
+def plot_1d(x, f_pred, f_exact=None,
             xlabel="x", ylabel="f(x)",
             title_pred="", title_err=""):
-    """
-    Produce and save solution + error plots for a 1-D result.
-
-    Parameters
-    ----------
-    tag : str
-        Filename prefix (e.g. '1_linear_fie').
-    x : np.ndarray
-        Query points.
-    f_pred : np.ndarray
-        Predicted solution.
-    f_exact : np.ndarray or None
-        Exact solution values on the same x.  If None, only the solution
-        plot is produced (no error plot).
-    """
+    """Display solution + error plots for a 1-D result."""
     # --- Solution plot ---
-    fig, ax = plt.subplots(figsize=(6, 4))
+    _, ax = plt.subplots(figsize=(6, 4))
     ax.plot(x, f_pred, label="FNN prediction", linewidth=1.8)
     if f_exact is not None:
         ax.plot(x, f_exact, "--", label="Exact solution", linewidth=1.4)
@@ -72,38 +47,25 @@ def plot_1d(tag, x, f_pred, f_exact=None,
     ax.set_ylabel(ylabel)
     ax.set_title(title_pred or "Predicted vs. exact solution")
     ax.grid(True, alpha=0.3)
-    _save(fig, f"{tag}_solution.png")
+    plt.tight_layout()
+    plt.show()
 
     # --- Error plot ---
     if f_exact is not None:
         error = np.abs(f_pred - f_exact)
-        fig, ax = plt.subplots(figsize=(6, 4))
+        _, ax = plt.subplots(figsize=(6, 4))
         ax.plot(x, error, color="C2", linewidth=1.6)
         ax.set_xlabel(xlabel)
         ax.set_ylabel(r"$|\hat{f}(x) - f(x)|$")
         ax.set_title(title_err or "Pointwise absolute error")
         ax.grid(True, alpha=0.3)
-        _save(fig, f"{tag}_error.png")
+        plt.tight_layout()
+        plt.show()
 
 
-def plot_2d(tag, r, theta, u_pred, u_exact=None,
+def plot_2d(r, theta, u_pred, u_exact=None,
             title_pred="", title_err=""):
-    """
-    Produce and save contour solution + error plots for a 2-D polar result.
-    Axes are (φ, r) directly — matching the paper/notebook style.
-
-    Parameters
-    ----------
-    tag : str
-        Filename prefix.
-    r, theta : np.ndarray, 1-D
-        Radial and angular grids.
-    u_pred : np.ndarray, shape (Nr, Ntheta)
-        Predicted solution on the meshgrid (rows = r, cols = theta).
-    u_exact : np.ndarray or None
-        Exact solution on the same meshgrid.
-    """
-    # Meshgrid for contourf: x-axis = phi, y-axis = r
+    """Display contour solution + error plots for a 2-D polar result."""
     Th, R = np.meshgrid(theta, r, indexing="xy")  # shape (Nr, Ntheta)
 
     # --- Solution plot ---
@@ -114,7 +76,8 @@ def plot_2d(tag, r, theta, u_pred, u_exact=None,
     ax.set_xlabel(r"$\phi$", fontsize=13)
     ax.set_ylabel(r"$r$", fontsize=13)
     ax.set_title(title_pred or "Predicted solution")
-    _save(fig, f"{tag}_solution.png")
+    plt.tight_layout()
+    plt.show()
 
     # --- Error plot ---
     if u_exact is not None:
@@ -126,7 +89,8 @@ def plot_2d(tag, r, theta, u_pred, u_exact=None,
         ax.set_xlabel(r"$\phi$", fontsize=13)
         ax.set_ylabel(r"$r$", fontsize=13)
         ax.set_title(title_err or "Pointwise absolute error")
-        _save(fig, f"{tag}_error.png")
+        plt.tight_layout()
+        plt.show()
 
 
 # ---------------------------------------------------------------------------
@@ -152,7 +116,6 @@ def example_linear_fie():
     f_exact = exact(sol.x)
 
     plot_1d(
-        tag="1_linear_fie",
         x=sol.x, f_pred=sol.f, f_exact=f_exact,
         xlabel=r"$x$", ylabel=r"$\hat{f}(x)$",
         title_pred=r"Linear FIE — $f(x) = \sin(x) + \int_0^{\pi/2} \sin(x)\cos(z)f(z)\,dz$",
@@ -177,7 +140,7 @@ def example_linear_fie_km():
         kernel      = lambda x, z: lamb * (np.cos(25*(z-x)) + np.cos(7*(z-x))),
         additive    = lambda x: np.sin(25*x) + np.sin(7*x),
         domain      = (0.0, 1.0),
-        n_grid      = 5000,
+        n_grid      = 2000,
         n_iterations= 200,
         km_constant = 0.5,
         predict_at  = np.linspace(0, 1, 200),
@@ -187,7 +150,6 @@ def example_linear_fie_km():
     f_exact = exact(sol.x)
 
     plot_1d(
-        tag="2_linear_fie_km",
         x=sol.x, f_pred=sol.f, f_exact=f_exact,
         xlabel=r"$x$", ylabel=r"$\hat{f}(x)$",
         title_pred=r"Linear FIE (KM, $\kappa=0.5$)",
@@ -219,15 +181,12 @@ def example_nonlinear_fie():
         predict_at   = np.linspace(0, 1, 100),
     )
 
-    # No exact solution — plot prediction only
     plot_1d(
-        tag="3_nonlinear_fie",
         x=sol.x, f_pred=sol.f, f_exact=None,
         xlabel=r"$x$", ylabel=r"$\hat{f}(x)$",
         title_pred=r"Non-linear FIE — $f(x) = \cos(x) + 0.1\int_0^1 xz\sin(f(z))\,dz$",
     )
 
-    # Self-consistency residual for the pass/fail check
     x = sol.x
     z = np.linspace(0.0, 1.0, 300)
     dz = z[1] - z[0]
@@ -258,8 +217,8 @@ def example_bvp_ode():
         alpha   = 0.0,
         beta    = 1.0 / np.sqrt(p + 1.0),
         domain  = (0.0, 1.0),
-        n_grid      = 1000,
-        n_iterations= 10,
+        n_grid      = 5000,
+        n_iterations= 20,
         predict_at  = np.linspace(0, 1, 200),
     )
 
@@ -267,7 +226,6 @@ def example_bvp_ode():
     f_exact = exact(sol.x)
 
     plot_1d(
-        tag="4_bvp_ode",
         x=sol.x, f_pred=sol.y, f_exact=f_exact,
         xlabel=r"$x$", ylabel=r"$\tilde{y}(x)$",
         title_pred=r"BVP ODE — $y'' + \frac{3p}{(p+x^2)^2}y = 0$",
@@ -288,9 +246,8 @@ def example_laplace_pde():
     from fredholm_nn import solve_laplace
 
     n_boundary = 500
-    # Use the same angular grid as the boundary discretisation (half-open [0, 2π))
     dphi   = 2.0 * np.pi / n_boundary
-    phi    = np.arange(0.0, 2.0 * np.pi, dphi)   # shape (500,)
+    phi    = np.arange(0.0, 2.0 * np.pi, dphi)
     r_vals = np.linspace(0.0, 1.0, 100)
 
     sol = solve_laplace(
@@ -309,7 +266,6 @@ def example_laplace_pde():
     u_exact = exact_fn(R, Th)
 
     plot_2d(
-        tag="5_laplace_pde",
         r=r_vals, theta=phi,
         u_pred=sol.u, u_exact=u_exact,
         title_pred=r"Laplace PDE — $\tilde{u}(r,\phi)$",
@@ -325,7 +281,6 @@ def example_laplace_pde():
 if __name__ == "__main__":
     print("=" * 60)
     print("  fredholm_nn — example run")
-    print(f"  Plots saved to: {os.path.abspath(OUTPUT_DIR)}/")
     print("=" * 60)
 
     examples = [
@@ -348,5 +303,4 @@ if __name__ == "__main__":
     print("\n" + "=" * 60)
     passed = sum(results)
     print(f"  {passed} / {len(results)} examples passed")
-    print(f"  Plots saved to: {os.path.abspath(OUTPUT_DIR)}/")
     print("=" * 60)
